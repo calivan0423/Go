@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/calivan0423/dictionary/mydict"
+	"github.com/calivan0423/Go/dictionary/mydict"
 )
 
 func main() {
