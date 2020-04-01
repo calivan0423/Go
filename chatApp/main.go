@@ -3,13 +3,16 @@ package main
 import (
 	"net/http"
 
-	"github.com/codegangsta/negroni"
 	"github.com/julienschmidt/httprouter"
 	"github.com/unrolled/render"
+	"github.com/urfave/negroni"
 
 	// 웹 어플에서 세션을 생서 관리
 	sessions "github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
+
+	//몽고db 패키지
+	"gopkg.in/mgo.v2"
 )
 
 const (
@@ -18,11 +21,22 @@ const (
 	sessionSecret = "simple_chat_session_secret"
 )
 
-var renderer *render.Render
+var (
+	renderer     *render.Render
+	mongoSession *mgo.Session
+)
 
 func init() {
 	//create render
 	renderer = render.New()
+
+	s, err := mgo.Dial("mongodb://localhost")
+	if err != nil {
+		panic(err)
+	}
+
+	mongoSession = s
+
 }
 
 func main() {
@@ -30,9 +44,14 @@ func main() {
 	router := httprouter.New()
 
 	//define handler
+
 	router.GET("/", func(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		renderer.HTML(w, http.StatusOK, "index", map[string]string{"title": "simple chat"})
 	})
+
+	router.GET("/rooms", createRoom)
+	router.POST("/rooms", retrieveRooms)
+	router.GET("/rooms/:id/messages", retrieveMessage)
 
 	router.GET("/login", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		//로그인 페이지 렌더링

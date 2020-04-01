@@ -53,6 +53,6 @@ func SetCurrentUser(r *http.Request, u *User) {
 
 	//세션에 현재유저정보를 json으로 저장
 	s := sessions.GetSession(r)
-	val, _ := json.Marshal(r) //JSON으로 인코딩된 바이트배열과 에러객체를 리턴
+	val, _ := json.Marshal(u) //JSON으로 인코딩된 바이트배열과 에러객체를 리턴
 	s.Set(currentUserKey, val)
 }

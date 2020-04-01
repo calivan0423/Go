@@ -3,24 +3,57 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	sessions "github.com/goincremental/negroni-sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/google"
 	"github.com/stretchr/objx"
+	"github.com/urfave/negroni"
 )
 
 const (
-	nextPageKey     = " next_page" //세선에 저장되는 next page의 키
+	nextPageKey     = "next_page" //세선에 저장되는 next page의 키
 	authSecurityKey = "auth_security_key"
 )
 
 func init() {
 	//gomniauth 정보 세팅
 	gomniauth.SetSecurityKey(authSecurityKey)
-	gomniauth.WithProviders(google.New("826357128682-7j3osck2fn7b9o1tl3bvk384shouvrsd.apps.googleusercontent.com", "Zd1sA9aPl0AFDrTW6zzH7RiL", "http://127.0.0.1:3000/auth/callbakc/gogle"))
+	gomniauth.WithProviders(google.New("826357128682-7j3osck2fn7b9o1tl3bvk384shouvrsd.apps.googleusercontent.com", "Zd1sA9aPl0AFDrTW6zzH7RiL", "http://127.0.0.1:3000/auth/callbakc/google"))
 
+}
+
+func LoginRequired(ignore ...string) negroni.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		//ignore url 이면 다음 핸들러 실행
+		for _, s := range ignore {
+			if strings.HasPrefix(r.URL.Path, s) {
+				next(w, r)
+				return
+			}
+		}
+
+		u := GetCurrenUser(r)
+
+		//현재 유저 정보가 유효하면 만료시간을 갱신, 다음 핸들러 실행
+		if u != nil && u.Valid() {
+			SetCurrentUser(r, u)
+			next(w, r)
+			return
+		}
+
+		//현재 유저 정보가 유효하지 않으면 현재 유저를 nil로
+		SetCurrentUser(r, nil)
+
+		//로그인 후 이동할 url을 세선에 저장
+		sessions.GetSession(r).Set(nextPageKey, r.URL.RequestURI())
+
+		//로그인 페이지로 리다이렉트
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+	}
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -70,7 +103,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		SetCurrentUser(r, u)
 		http.Redirect(w, r, s.Get(nextPageKey).(string), http.StatusFound)
 	default:
-		http.Error(w, "Auth action `"+action+"`is not supported", http.StatusNotFound)
+		http.Error(w, "Auth action  '"+action+"'is not supported", http.StatusNotFound)
 
 	}
 }

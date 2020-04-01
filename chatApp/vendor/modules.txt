@@ -1,9 +1,6 @@
 # github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec
 ## explicit
 github.com/clbanning/x2j
-# github.com/codegangsta/negroni v1.0.0
-## explicit
-github.com/codegangsta/negroni
 # github.com/goincremental/negroni-sessions v0.0.0-20171223143234-40b49004abee
 ## explicit
 github.com/goincremental/negroni-sessions
@@ -19,6 +16,9 @@ github.com/gorilla/sessions
 # github.com/julienschmidt/httprouter v1.3.0
 ## explicit
 github.com/julienschmidt/httprouter
+# github.com/mholt/binding v0.3.0
+## explicit
+github.com/mholt/binding
 # github.com/stretchr/codecs v0.0.0-20170403063245-04a5b1e1910d
 ## explicit
 github.com/stretchr/codecs
@@ -60,5 +60,8 @@ github.com/unrolled/render
 github.com/urfave/negroni
 # gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 ## explicit
+gopkg.in/mgo.v2
 gopkg.in/mgo.v2/bson
 gopkg.in/mgo.v2/internal/json
+gopkg.in/mgo.v2/internal/sasl
+gopkg.in/mgo.v2/internal/scram
