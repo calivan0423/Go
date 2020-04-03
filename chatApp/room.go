@@ -10,8 +10,8 @@ import (
 )
 
 type Room struct {
-	ID   bson.ObjectId `bson:"_id" josn :id"`
-	Name string        `bson:"name" josn:"name"`
+	ID   bson.ObjectId `bson:"_id" json:"id"`
+	Name string        `bson:"name" json:"name"`
 }
 
 //request 데이터를 Room 타입 구조체로 변환하기 위하여 fieldMap 메서드 추가
@@ -23,8 +23,8 @@ func (r *Room) FieldMap(req *http.Request) binding.FieldMap {
 func createRoom(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//binding 패키지로 room 생성 요청 정보를 Room 타입 값으로 변환
 	r := new(Room)
-	err := binding.Bind(req, r)
-	if err.Handle(w) {
+	errs := binding.Bind(req, r)
+	if errs.Handle(w) {
 		return
 	}
 
@@ -62,4 +62,29 @@ func retrieveRooms(w http.ResponseWriter, req *http.Request, ps httprouter.Param
 	}
 	renderer.JSON(w, http.StatusOK, rooms)
 
+}
+
+func retrieveRoom(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	session := mongoSession.Copy()
+	defer session.Close()
+
+	var room Room
+	err := session.DB("test").C("rooms").FindId(bson.ObjectIdHex(ps.ByName("id"))).One(&room)
+	if err != nil {
+		renderer.JSON(w, http.StatusInternalServerError, err)
+		return
+	}
+	renderer.JSON(w, http.StatusOK, room)
+}
+
+func deleteRoom(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	session := mongoSession.Copy()
+	defer session.Close()
+
+	err := session.DB("test").C("rooms").RemoveId(bson.ObjectIdHex(ps.ByName("id")))
+	if err != nil {
+		renderer.JSON(w, http.StatusInternalServerError, err)
+		return
+	}
+	renderer.JSON(w, http.StatusNoContent, nil)
 }

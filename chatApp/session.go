@@ -31,7 +31,7 @@ func (u *User) Refresh() {
 	u.Expired = time.Now().Add(sessionDuration)
 }
 
-func GetCurrenUser(r *http.Request) *User {
+func GetCurrentUser(r *http.Request) *User {
 	//세션어세 현재 유저 정보 get
 	s := sessions.GetSession(r)
 

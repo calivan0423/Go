@@ -1,6 +1,8 @@
 # github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec
 ## explicit
 github.com/clbanning/x2j
+# github.com/codegangsta/negroni v1.0.0
+## explicit
 # github.com/goincremental/negroni-sessions v0.0.0-20171223143234-40b49004abee
 ## explicit
 github.com/goincremental/negroni-sessions
@@ -13,6 +15,9 @@ github.com/gorilla/securecookie
 # github.com/gorilla/sessions v1.2.0
 ## explicit
 github.com/gorilla/sessions
+# github.com/gorilla/websocket v1.4.2
+## explicit
+github.com/gorilla/websocket
 # github.com/julienschmidt/httprouter v1.3.0
 ## explicit
 github.com/julienschmidt/httprouter

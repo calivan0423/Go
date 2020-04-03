@@ -4,9 +4,11 @@ go 1.14
 
 require (
 	github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec // indirect
+	github.com/codegangsta/negroni v1.0.0 // indirect
 	github.com/goincremental/negroni-sessions v0.0.0-20171223143234-40b49004abee
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.0 // indirect
+	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mholt/binding v0.3.0
 	github.com/stretchr/codecs v0.0.0-20170403063245-04a5b1e1910d // indirect
