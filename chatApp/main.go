@@ -87,9 +87,8 @@ func main() {
 	router.GET("/auth/:action/:provider", loginHandler)
 
 	router.GET("/ws/:room_id", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		log.Printf("HELLO")
+
 		conn, err := upgrader.Upgrade(w, r, nil)
-		log.Printf("HELLO2")
 		if err != nil {
 			log.Fatal("ServeHTTP:", err)
 			return

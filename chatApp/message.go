@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -14,11 +13,11 @@ import (
 const messageFetchSize = 10
 
 type Message struct {
-	ID        bson.ObjectId `bson: "_id" json: "id"`
-	RoomId    bson.ObjectId `bson: "room_id" json: "room_id"`
-	Content   string        `bson: "content" json: "content"`
-	CreatedAt time.Time     `bson: "created_at" json: "created_at"`
-	User      *User         `bson: "user" json:"user"`
+	ID        bson.ObjectId `bson:"_id" json:"id"`
+	RoomId    bson.ObjectId `bson:"room_id" json:"room_id"`
+	Content   string        `bson:"content" json:"content"`
+	CreatedAt time.Time     `bson:"created_at" json:"created_at"`
+	User      *User         `bson:"user" json:"user"`
 }
 
 func (m *Message) FieldMap(r *http.Request) binding.FieldMap {
@@ -28,7 +27,6 @@ func (m *Message) FieldMap(r *http.Request) binding.FieldMap {
 }
 
 func (m *Message) create() error {
-	log.Printf("HELLO")
 	// 몽고DB 세션 생성
 	session := mongoSession.Copy()
 	// 몽고DB 세션을 닫는 코드를 defer로 등록
@@ -36,11 +34,12 @@ func (m *Message) create() error {
 
 	// 몽고DB 아이디 생성
 	m.ID = bson.NewObjectId()
+
 	// 메세지 생성 시간 기록
 	m.CreatedAt = time.Now()
+
 	// message 정보 저장을 위한 몽고DB 컬렉션 객체 생성
 	c := session.DB("test").C("messages")
-
 	// messages 컬렉션에 message 정보 저장
 	if err := c.Insert(m); err != nil {
 		return err

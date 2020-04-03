@@ -30,6 +30,7 @@ func createRoom(w http.ResponseWriter, req *http.Request, ps httprouter.Params) 
 
 	//몽고db 세션 생성
 	session := mongoSession.Copy()
+
 	// 몽고db 세션을 단는 코드를 defer로 등록
 	defer session.Close()
 

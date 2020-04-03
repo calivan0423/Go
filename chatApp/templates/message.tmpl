@@ -35,7 +35,7 @@
                   
                 socket.close();
           }
-          socket = new WebSocket(socketEndPoint + roomId);
+          socket = new WebSocket("ws://127.0.0.1:3000/ws/" + roomId);
           socket.onmessage = function(e) {
                   addMessage(JSON.parse(e.data));
           }
@@ -56,6 +56,8 @@
   
           $("#messages").append($("<div>").addClass("media").append(img, msg));
   }
+  
+
   
   // 소켓 연결이 완료되지 않은 경우, 소켓 연결이 완료될 때 까지 대기 후 callback 실행
   function waitForSocketConnection(socket, callback) {
